@@ -116,5 +116,5 @@ let persons = [
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`App runing on port ${PORT}`);
+  console.log(`The app is running on port ${PORT}`);
 });
