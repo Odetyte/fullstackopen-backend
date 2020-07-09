@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const cors = require('cors')
 
+app.use(cors())
 
 
 morgan.token('body', (request, response) =>{
@@ -111,6 +113,7 @@ let persons = [
   });
   // checking if HTTP requests are working by using Postman
 
-const port = 3001
-app.listen(port)
-console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`App runing on port ${PORT}`);
+});
