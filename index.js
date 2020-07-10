@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person');
 
 app.use(cors());
 app.use(express.static('build'));
@@ -57,9 +59,11 @@ let persons = [
 `);
   });
   
-  app.get('/api/persons', (request, response) => {
+app.get("/api/persons", (request, response) => {
+  Person.find({}).then((persons) => {
     response.json(persons)
   });
+});
 
   
   app.post('/api/persons', (request, response) => {
@@ -78,11 +82,12 @@ let persons = [
     };
     
     
-    const person = {
+    const person =  new Person ({
       name: addPerson.name,
       number: addPerson.number,
       id: Math.floor(Math.random() * 99999999)
-    };
+    });
+  
 
     const matchingName = persons.find(p =>
       p.name.toUpperCase() === addPerson.name.toUpperCase());
@@ -91,9 +96,11 @@ let persons = [
         error: 'name must be unique'  
       })
     };
+    
     persons = persons.concat(person)
   
     response.json(person)
+  
   });
 
   app.get('/api/persons/:id', (request, response) => {
@@ -114,7 +121,7 @@ let persons = [
   });
   // checking if HTTP requests are working by using Postman
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`The app is running on port ${PORT}`);
 });
