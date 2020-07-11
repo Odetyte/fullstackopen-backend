@@ -100,7 +100,7 @@ app.get("/api/persons", (request, response) => {
     return person
     .save()
     .then((personToSave) => {
-      res.json(personToSave.toJSON())
+      response.json(personToSave.toJSON())
     })
     .catch((error) => next(error))
 })
@@ -118,7 +118,7 @@ app.get("/api/persons", (request, response) => {
 })
   
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.deleteOne({ _id: request.params.id }) // good documentation on how to delete on https://www.w3schools.com/nodejs/nodejs_mongodb_delete.asp
+  Person.deleteOne({ _id: request.params.id }) // good documentation on how to delete on mongoosejs.com
     .then(result => {
       if (result.deletedCount === 0) {
         response.status(404).json({ errorMessage: 'Person no longer exists' })
@@ -157,13 +157,10 @@ app.delete('/api/persons/:id', (request, response, next) => {
   
     if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'Malformed ID' })
-  }
-
-  if (error.name === 'ValidationError') {
+  }else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
-
-  return next(error)
+  next(error)
 }
   
   app.use(errorHandler)
